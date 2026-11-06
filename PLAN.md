@@ -215,38 +215,31 @@ sudo mount -t ntfs3 -o ro /dev/nvme0n1p2 /mnt/windows
 ls /mnt/windows/Users/kosty/.gemini/antigravity/brain/ | head
 ```
 
-### 5.3. Перенести данные (121 чат, ~2 ГБ)
+### 5.3. Перенести данные и проекты (121 чат, включая AI-Dubbing)
+
+> [!IMPORTANT]
+> Простого копирования файлов недостаточно: в Windows пути проектов записаны как `file:///e%3A/AI-Dubbing`, а в Linux они находятся в `/mnt/ai/AI-Dubbing`. Кроме того, боковая панель GUI хранит открытые проекты в `~/.config/Antigravity/app_storage.json`.
+
+Используй готовый скрипт переноса `fix_antigravity_migration.py`:
 
 ```bash
-# История чатов
-cp -r /mnt/windows/Users/kosty/.gemini/antigravity/brain/* \
-      ~/.gemini/antigravity/brain/
-
-# База саммари чатов
-cp /mnt/windows/Users/kosty/.gemini/antigravity/conversation_summaries.db \
-   ~/.gemini/antigravity/
-
-# Индекс разговоров
-cp -r /mnt/windows/Users/kosty/.gemini/antigravity/conversations/* \
-      ~/.gemini/antigravity/conversations/
-
-# Learned знания
-cp -r /mnt/windows/Users/kosty/.gemini/antigravity/knowledge/* \
-      ~/.gemini/antigravity/knowledge/
-
-# Кастомизации (скиллы, правила)
-cp -r /mnt/windows/Users/kosty/.gemini/config/* \
-      ~/.gemini/config/
+# Запустить скрипт миграции (автоматически обновит пути и скопирует всё необходимое):
+python3 fix_antigravity_migration.py --win-c /mnt/windows --ai-mount /mnt/ai
 ```
 
-> [!NOTE]
-> Авторизацию (`google_auth`) копировать **не нужно** — ты уже залогинился на шаге 5.1. Бинарники (`bin`, `lib`, `builtin`) тоже не копируем — у Linux свои.
+Что делает скрипт:
+1. Копирует `conversation_summaries.db` и сливает WAL-журнал без потерь.
+2. Автоматически переводит пути проектов с `file:///e%3A/AI-Dubbing` на `file:///mnt/ai/AI-Dubbing`.
+3. Копирует все 279 баз разговоров (`conversations/*.db`), включая 9 чатов дубляжа.
+4. Переносит все папки чатов и артефактов (`brain/*`).
+5. Настраивает `~/.config/Antigravity/app_storage.json`, чтобы проекты сразу появились в левом боковом меню десктопного приложения.
+6. Копирует кастомизации (`config/`), скиллы и знания (`knowledge/`).
 
 ### 5.4. Проверить
 
 ```bash
-agy
-# Должны быть видны старые чаты и кастомизации
+antigravity
+# Проект AI-Dubbing появится в левом меню со всеми 9 чатами!
 ```
 
 ---

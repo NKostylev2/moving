@@ -41,15 +41,17 @@
 ### Этап 5: Antigravity + перенос данных
 
 1. Установить Antigravity: `curl -sL https://antigravity.google/install.sh | bash`
-2. Смонтировать раздел Windows `C:` (label `System`) в `/mnt/windows` (read-only)
-3. Перенести данные Antigravity:
-   - `brain/*` → `~/.gemini/antigravity/brain/` (121 чат)
-   - `conversation_summaries.db` → `~/.gemini/antigravity/`
-   - `conversations/*` → `~/.gemini/antigravity/conversations/`
-   - `knowledge/*` → `~/.gemini/antigravity/knowledge/`
-   - `config/*` → `~/.gemini/config/`
-4. **НЕ копировать:** `google_auth/`, `bin/`, `lib/`, `builtin/`, `daemon/`
-5. Попросить пользователя авторизоваться: `agy`
+2. Попросить пользователя авторизоваться: `agy` (или войти через Google)
+3. Смонтировать раздел Windows `C:` (label `System`) в `/mnt/windows` (read-only):
+   `sudo mkdir -p /mnt/windows && sudo mount -t ntfs3 -o ro /dev/nvme0n1p2 /mnt/windows`
+4. Запустить скрипт переноса путей и проектов:
+   `python3 fix_antigravity_migration.py --win-c /mnt/windows --ai-mount /mnt/ai`
+   Этот скрипт:
+   - Обновит SQLite пути с Windows (`file:///e%3A/AI-Dubbing`) на Linux (`file:///mnt/ai/AI-Dubbing`)
+   - Перенесёт 9 чатов дубляжа + все остальные чаты (`brain/*`, `conversations/*.db`)
+   - Настроит `~/.config/Antigravity/app_storage.json` для отображения проектов в боковой панели GUI
+   - Скопирует кастомизации (`config/`) и `knowledge/`
+   - **НЕ затрагивает** системные бинарники и `google_auth`
 
 ### Этап 6: CosyVoice3
 

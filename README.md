@@ -10,6 +10,8 @@
 | [AGENTS.md](AGENTS.md) | Инструкции для AI-агента (Antigravity) по автонастройке |
 | [setup.sh](setup.sh) | Интерактивный скрипт полной автонастройки |
 | [fix_antigravity_migration.py](fix_antigravity_migration.py) | Скрипт восстановления проектов, чатов и обновления путей с Windows на Linux |
+| [bench_cosyvoice.py](bench_cosyvoice.py) | Скрипт бенчмарка CosyVoice 3 (RTF, скорость) с авто-сравнением Windows vs Linux |
+| [bench_report_windows.json](bench_report_windows.json) | Исходный baseline-замер производительности на Windows (RTX 3070, RTF 1.182) |
 
 ## Быстрый старт (после установки Ubuntu)
 
@@ -35,6 +37,21 @@ python3 fix_antigravity_migration.py --win-c /mnt/windows --ai-mount /mnt/ai
 ```
 
 Скрипт интерактивный — спрашивает перед каждым действием.
+
+## Бенчмарк производительности (CosyVoice 3)
+
+До миграции был снят baseline на Windows 11 (RTX 3070):
+- **Модель:** `Fun-CosyVoice3-0.5B`
+- **Загрузка модели:** 22.75 сек
+- **Средний RTF:** 1.1818 (0.846x от реального времени)
+- **Файл отчёта:** [bench_report_windows.json](bench_report_windows.json)
+
+После настройки CosyVoice3 на Linux:
+```bash
+source ~/cosyvoice-env/bin/activate
+python3 bench_cosyvoice.py
+```
+Скрипт автоматически сравнит полученные значения с Windows baseline и выведет таблицу прироста скорости от GPU Unlock.
 
 ## Или через Antigravity
 

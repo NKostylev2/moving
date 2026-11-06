@@ -53,13 +53,19 @@
    - Скопирует кастомизации (`config/`) и `knowledge/`
    - **НЕ затрагивает** системные бинарники и `google_auth`
 
-### Этап 6: CosyVoice3
+### Этап 6: CosyVoice3 & Бенчмарк
 
 1. Установить: `python3 python3-pip python3-venv ffmpeg`
 2. Создать venv: `python3 -m venv ~/cosyvoice-env`
 3. Установить PyTorch с CUDA: `pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121`
 4. Установить CosyVoice по инструкциям из их репозитория
 5. Модели указывать из `~/AI-Dubbing/`
+6. Запустить сравнительный бенчмарк:
+   ```bash
+   source ~/cosyvoice-env/bin/activate
+   python3 bench_cosyvoice.py
+   ```
+   Скрипт автоматически сопоставит результат с `bench_report_windows.json` (baseline RTF 1.182) и покажет прирост скорости от GPU Unlock.
 
 ### Финальная проверка
 
@@ -67,6 +73,7 @@
 2. `ls ~/AI-Dubbing/` — модели доступны
 3. `agy` — Antigravity работает, старые чаты видны
 4. После перезагрузки: `journalctl -k -b | grep gpu_unlock` — unlock успешен
+5. Отчёт `bench_report_linux.json` сформирован и подтверждает ускорение
 
 ## Важные ограничения
 

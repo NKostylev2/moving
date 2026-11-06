@@ -1,0 +1,51 @@
+{
+  "platform": "Windows",
+  "gpu": "NVIDIA GeForce RTX 3070",
+  "model_load_s": 22.75,
+  "total_audio_s": 64.04,
+  "total_synth_s": 75.683,
+  "avg_rtf": 1.1818,
+  "throughput_x": 0.846,
+  "segments": [
+    {
+      "idx": 1,
+      "chars": 196,
+      "audio_s": 12.8,
+      "synth_s": 16.364,
+      "rtf": 1.2785,
+      "speedup": 0.782
+    },
+    {
+      "idx": 2,
+      "chars": 172,
+      "audio_s": 12.24,
+      "synth_s": 14.569,
+      "rtf": 1.1903,
+      "speedup": 0.84
+    },
+    {
+      "idx": 3,
+      "chars": 146,
+      "audio_s": 10.92,
+      "synth_s": 13.434,
+      "rtf": 1.2302,
+      "speedup": 0.813
+    },
+    {
+      "idx": 4,
+      "chars": 210,
+      "audio_s": 13.28,
+      "synth_s": 14.985,
+      "rtf": 1.1284,
+      "speedup": 0.886
+    },
+    {
+      "idx": 5,
+      "chars": 218,
+      "audio_s": 14.8,
+      "synth_s": 16.331,
+      "rtf": 1.1034,
+      "speedup": 0.906
+    }
+  ]
+}

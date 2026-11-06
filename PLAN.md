@@ -244,7 +244,7 @@ antigravity
 
 ---
 
-## Этап 6: CosyVoice3 (15 мин)
+## Этап 6: CosyVoice3 & Сравнительный бенчмарк (15 мин)
 
 ```bash
 # Python и зависимости
@@ -259,7 +259,12 @@ pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 # Установить CosyVoice (следуй их инструкциям)
 # Модели указывай из ~/AI-Dubbing/...
+
+# Запуск сравнительного бенчмарка:
+python3 bench_cosyvoice.py
 ```
+
+Скрипт автоматически сравнит скорость с Windows baseline (`bench_report_windows.json`, RTF 1.182) и покажет реальный прирост от GPU Unlock в процентах.
 
 ---
 

@@ -8,7 +8,8 @@
 |---|---|
 | [PLAN.md](PLAN.md) | Пошаговый план на русском — от подготовки Windows до работающей системы |
 | [AGENTS.md](AGENTS.md) | Инструкции для AI-агента (Antigravity) по автонастройке |
-| [setup.sh](setup.sh) | Интерактивный скрипт автонастройки |
+| [setup.sh](setup.sh) | Интерактивный скрипт полной автонастройки |
+| [fix_antigravity_migration.py](fix_antigravity_migration.py) | Скрипт восстановления проектов, чатов и обновления путей с Windows на Linux |
 
 ## Быстрый старт (после установки Ubuntu)
 
@@ -17,6 +18,20 @@ git clone https://github.com/NKostylev2/moving
 cd moving
 chmod +x setup.sh
 sudo ./setup.sh
+```
+
+### Если Ubuntu уже установлена, но проект дубляжа не отобразился:
+
+```bash
+cd moving
+git pull
+
+# Смонтировать Windows C: (если не смонтирован)
+sudo mkdir -p /mnt/windows
+sudo mount -t ntfs3 -o ro /dev/nvme0n1p2 /mnt/windows
+
+# Запустить восстановление проектов и чатов
+python3 fix_antigravity_migration.py --win-c /mnt/windows --ai-mount /mnt/ai
 ```
 
 Скрипт интерактивный — спрашивает перед каждым действием.

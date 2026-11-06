@@ -160,7 +160,7 @@ fi
 # ============================================================================
 # ЭТАП 5.2: Перенос данных Antigravity с Windows
 # ============================================================================
-if ask "Этап 5.2: Перенести чаты и настройки Antigravity с Windows"; then
+if ask "Этап 5.2: Перенести чаты, проекты и настройки Antigravity с Windows"; then
     # Монтирование C:
     WIN_DEV=""
     WIN_UUID=""
@@ -186,50 +186,14 @@ if ask "Этап 5.2: Перенести чаты и настройки Antigrav
     mount -t ntfs3 -o ro "$WIN_DEV" /mnt/windows
     info "Windows смонтирован в /mnt/windows"
 
-    WIN_GEMINI="/mnt/windows/Users/kosty/.gemini"
-
-    if [[ ! -d "$WIN_GEMINI/antigravity/brain" ]]; then
-        err "Данные Antigravity не найдены в $WIN_GEMINI"
-        err "Проверь путь вручную: ls /mnt/windows/Users/"
+    SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    if [[ -f "$SCRIPT_DIR/fix_antigravity_migration.py" ]]; then
+        sudo -u "$REAL_USER" python3 "$SCRIPT_DIR/fix_antigravity_migration.py" \
+            --win-c /mnt/windows \
+            --ai-mount /mnt/ai \
+            --dest-home "$REAL_HOME"
     else
-        DEST="$REAL_HOME/.gemini"
-
-        # brain (чаты)
-        if [[ -d "$WIN_GEMINI/antigravity/brain" ]]; then
-            sudo -u "$REAL_USER" mkdir -p "$DEST/antigravity/brain"
-            sudo -u "$REAL_USER" cp -r "$WIN_GEMINI/antigravity/brain/"* "$DEST/antigravity/brain/" 2>/dev/null || true
-            log "Чаты скопированы (brain/)"
-        fi
-
-        # conversation_summaries.db
-        if [[ -f "$WIN_GEMINI/antigravity/conversation_summaries.db" ]]; then
-            sudo -u "$REAL_USER" cp "$WIN_GEMINI/antigravity/conversation_summaries.db" "$DEST/antigravity/"
-            log "База саммари скопирована"
-        fi
-
-        # conversations
-        if [[ -d "$WIN_GEMINI/antigravity/conversations" ]]; then
-            sudo -u "$REAL_USER" mkdir -p "$DEST/antigravity/conversations"
-            sudo -u "$REAL_USER" cp -r "$WIN_GEMINI/antigravity/conversations/"* "$DEST/antigravity/conversations/" 2>/dev/null || true
-            log "Индекс разговоров скопирован"
-        fi
-
-        # knowledge
-        if [[ -d "$WIN_GEMINI/antigravity/knowledge" ]]; then
-            sudo -u "$REAL_USER" mkdir -p "$DEST/antigravity/knowledge"
-            sudo -u "$REAL_USER" cp -r "$WIN_GEMINI/antigravity/knowledge/"* "$DEST/antigravity/knowledge/" 2>/dev/null || true
-            log "Знания (knowledge) скопированы"
-        fi
-
-        # config (скиллы, правила)
-        if [[ -d "$WIN_GEMINI/config" ]]; then
-            sudo -u "$REAL_USER" mkdir -p "$DEST/config"
-            sudo -u "$REAL_USER" cp -r "$WIN_GEMINI/config/"* "$DEST/config/" 2>/dev/null || true
-            log "Кастомизации (config/) скопированы"
-        fi
-
-        COUNT=$(find "$DEST/antigravity/brain" -mindepth 1 -maxdepth 1 -type d 2>/dev/null | wc -l)
-        log "Перенесено чатов: $COUNT"
+        err "fix_antigravity_migration.py не найден в $SCRIPT_DIR"
     fi
 
     umount /mnt/windows 2>/dev/null || true
